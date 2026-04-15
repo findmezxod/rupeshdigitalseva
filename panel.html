@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+
+<style>
+*{margin:0;padding:0;font-family:Arial}
+
+body{
+    background: linear-gradient(135deg,#000,#8b0000);
+    color:white;
+}
+
+/* Navbar */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+    background:rgba(0,0,0,0.5);
+}
+
+/* Container */
+.container{
+    padding:15px;
+}
+
+/* Card */
+.card{
+    background: rgba(255,255,255,0.05);
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:15px;
+    backdrop-filter: blur(10px);
+}
+
+/* Input */
+input{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    border:none;
+    border-radius:10px;
+}
+
+/* Button */
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:red;
+    color:white;
+}
+
+/* User list */
+.user{
+    padding:10px;
+    margin-top:8px;
+    background:#111;
+    border-radius:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔐 ADMIN PROTECTION -->
+<script>
+let admin = localStorage.getItem("admin");
+
+if(admin !== "true"){
+    alert("Access Denied ❌");
+    window.location.href="index.html";
+}
+</script>
+
+<div class="navbar">
+    <h3>👑 Admin Panel</h3>
+</div>
+
+<div class="container">
+
+<!-- CREATE USER -->
+<div class="card">
+<h4>Create User</h4>
+
+<input id="newNum" placeholder="Mobile Number">
+<input id="newPass" placeholder="Password">
+
+<button onclick="createUser()">Create</button>
+</div>
+
+<!-- ADD BALANCE -->
+<div class="card">
+<h4>Add Balance</h4>
+
+<input id="balNum" placeholder="Mobile Number">
+<input id="amount" placeholder="Amount">
+
+<button onclick="addBalance()">Add</button>
+</div>
+
+<!-- DELETE USER -->
+<div class="card">
+<h4>Delete User</h4>
+
+<input id="delNum" placeholder="Mobile Number">
+
+<button onclick="deleteUser()">Delete</button>
+</div>
+
+<!-- USER LIST -->
+<div class="card">
+<h4>All Users</h4>
+
+<div id="userList"></div>
+</div>
+
+</div>
+
+<script>
+
+// LOAD USERS
+function loadUsers(){
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    let html = "";
+
+    for(let u in users){
+        html += `
+        <div class="user">
+        📱 ${u} | 💰 ₹${users[u].balance || 0}
+        </div>`;
+    }
+
+    document.getElementById("userList").innerHTML = html;
+}
+
+// CREATE USER
+function createUser(){
+    let num = newNum.value.trim();
+    let pass = newPass.value.trim();
+
+    if(!num || !pass){
+        alert("Enter details ❌");
+        return;
+    }
+
+    let id = "RC"+num;
+
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    users[id] = {password:pass,balance:0};
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("User created ✅");
+    loadUsers();
+}
+
+// ADD BALANCE
+function addBalance(){
+    let num = balNum.value.trim();
+    let amt = parseInt(amount.value);
+
+    let id = "RC"+num;
+
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    if(!users[id]){
+        alert("User not found ❌");
+        return;
+    }
+
+    users[id].balance += amt;
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Balance added 💰");
+    loadUsers();
+}
+
+// DELETE USER
+function deleteUser(){
+    let num = delNum.value.trim();
+
+    let id = "RC"+num;
+
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    if(users[id]){
+        delete users[id];
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("User deleted ❌");
+    } else {
+        alert("User not found");
+    }
+
+    loadUsers();
+}
+
+// INIT
+loadUsers();
+
+</script>
+
+</body>
+</html>

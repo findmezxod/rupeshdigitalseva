@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rupesh Digital Seva</title>
+
+<style>
+*{margin:0;padding:0;font-family:Arial}
+
+body{
+    background: linear-gradient(135deg,#000000,#8b0000);
+    color:white;
+}
+
+/* Navbar */
+.navbar{
+    padding:15px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* Glass Card */
+.card{
+    margin:15px;
+    padding:15px;
+    border-radius:15px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* Grid */
+.grid{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:10px;
+    padding:10px;
+}
+
+/* Service */
+.service{
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    cursor:pointer;
+    background: rgba(255,0,0,0.2);
+}
+
+.service:hover{
+    background: rgba(255,0,0,0.4);
+}
+
+/* Inputs */
+input,select,button{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    border:none;
+    border-radius:10px;
+}
+
+button{
+    background:red;
+    color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+🔥 Rupesh Digital Seva
+</div>
+
+<div class="card">
+💰 Balance: ₹<span id="balance">0</span>
+</div>
+
+<!-- PAN -->
+<div class="card service" onclick="openLink('https://onlineservices.proteantech.in/paam/endUserRegisterContact.html')">
+PAN CARD  
+<br><small>Charge: ₹110 (Pay on website)</small>
+</div>
+
+<!-- AADHAAR -->
+<div class="card service" onclick="openLink('https://tathya.uidai.gov.in/access/login?role=resident')">
+Aadhaar Update  
+<br><small>Charge: ₹75 (incl. GST)</small>
+</div>
+
+<!-- RECHARGE -->
+<div class="card">
+<h4>Mobile Recharge</h4>
+<input id="mobile" placeholder="Enter Mobile Number">
+<input id="amount" placeholder="Enter Amount">
+<button onclick="recharge()">Recharge</button>
+</div>
+
+<!-- DTH -->
+<div class="card">
+<h4>DTH / TV Recharge</h4>
+<select id="operator">
+<option>Dish TV</option>
+<option>Tata Play</option>
+<option>Airtel DTH</option>
+</select>
+<input id="customer" placeholder="Customer Number">
+<input id="dthAmount" placeholder="Amount">
+<button onclick="dth()">Recharge</button>
+</div>
+
+<!-- OTHER SERVICES -->
+<div class="grid">
+
+<div class="service" onclick="openLink('https://your-electricity-link.com')">Electricity</div>
+
+<div class="service" onclick="openLink('https://your-fastag-link.com')">FasTag</div>
+
+<div class="service" onclick="openLink('https://your-lpg-link.com')">LPG Booking</div>
+
+<div class="service" onclick="openLink('https://your-water-link.com')">Water</div>
+
+<div class="service" onclick="openLink('https://your-postpaid-link.com')">Postpaid</div>
+
+<div class="service" onclick="openLink('https://your-emi-link.com')">Pay EMI</div>
+
+<div class="service" onclick="openLink('https://your-lic-link.com')">LIC</div>
+
+<div class="service" onclick="openLink('https://your-bbps-link.com')">BBPS</div>
+
+</div>
+
+<script>
+
+// USER CHECK
+let user = localStorage.getItem("currentUser");
+let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+if(!user){
+    window.location.href="index.html";
+}
+
+// LOAD BALANCE
+document.getElementById("balance").innerText = users[user]?.balance || 0;
+
+// OPEN LINK
+function openLink(url){
+    window.location.href = url;
+}
+
+// RECHARGE
+function recharge(){
+    let num = document.getElementById("mobile").value;
+    let amt = document.getElementById("amount").value;
+
+    if(!num || !amt){
+        alert("Enter details ❌");
+        return;
+    }
+
+    alert("Recharge Request Sent ✅");
+}
+
+// DTH
+function dth(){
+    let op = document.getElementById("operator").value;
+    let cust = document.getElementById("customer").value;
+    let amt = document.getElementById("dthAmount").value;
+
+    if(!cust || !amt){
+        alert("Enter details ❌");
+        return;
+    }
+
+    alert("call 7904745069 ✅");
+}
+
+</script>
+
+</body>
+</html>

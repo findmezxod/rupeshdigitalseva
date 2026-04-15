@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rupesh Digital Seva</title>
+
+<style>
+*{margin:0;padding:0;font-family:Arial}
+
+body{
+    background: linear-gradient(135deg,#000,#8b0000);
+    color:white;
+}
+
+/* Center */
+.center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+/* Box */
+.box{
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    padding:25px;
+    border-radius:15px;
+    width:320px;
+    text-align:center;
+}
+
+/* Input */
+input,select{
+    width:100%;
+    padding:10px;
+    margin:6px 0;
+    border:none;
+    border-radius:10px;
+}
+
+/* Button */
+button{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:red;
+    color:white;
+}
+
+/* Link */
+.link{
+    font-size:12px;
+    margin-top:10px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox" class="center">
+<div class="box">
+
+<h2>🔥 Rupesh Digital Seva</h2>
+
+<input id="loginId" placeholder="Mobile Number">
+<input id="loginPass" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<div class="link" onclick="showRegister()">Create Account</div>
+
+</div>
+</div>
+
+<!-- REGISTER -->
+<div id="registerBox" class="center" style="display:none;">
+<div class="box">
+
+<h2>Register</h2>
+
+<input id="regNumber" placeholder="Mobile Number">
+<input id="regEmail" placeholder="Email">
+<input id="regPin" placeholder="Pincode">
+<input id="regMpin" placeholder="MPIN (4 digit)">
+<input id="regPass" placeholder="Password">
+
+<select id="role">
+<option>Retailer (Available)</option>
+<option disabled>Distributor (Soon)</option>
+<option disabled>Master Distributor (Soon)</option>
+</select>
+
+<button onclick="register()">Create Account</button>
+
+<div class="link" onclick="showLogin()">Back</div>
+
+</div>
+</div>
+
+<script>
+
+// SWITCH
+function showRegister(){
+    loginBox.style.display="none";
+    registerBox.style.display="flex";
+}
+function showLogin(){
+    registerBox.style.display="none";
+    loginBox.style.display="flex";
+}
+
+// REGISTER
+function register(){
+    let num = regNumber.value.trim();
+    let email = regEmail.value.trim();
+    let pin = regPin.value.trim();
+    let mpin = regMpin.value.trim();
+    let pass = regPass.value.trim();
+    let role = document.getElementById("role").value;
+
+    if(!num || !email || !pin || !mpin || !pass){
+        alert("Fill all fields ❌");
+        return;
+    }
+
+    let id = "RC"+num;
+
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    users[id] = {
+        number:num,
+        email:email,
+        pincode:pin,
+        mpin:mpin,
+        password:pass,
+        role:role,
+        balance:0
+    };
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account Created ✅\nID: "+id);
+
+    showLogin();
+}
+
+// LOGIN (🔥 FINAL FIX)
+function login(){
+    let num = loginId.value.trim();
+    let pass = loginPass.value.trim();
+
+    if(!num || !pass){
+        alert("Enter details ❌");
+        return;
+    }
+
+    // ADMIN LOGIN 👑
+    if(num==="7904745069" && pass==="admin"){
+        localStorage.setItem("admin","true");
+        window.location.href="panel.html";
+        return;
+    }
+
+    let id = "RC"+num;
+
+    let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    // AUTO FIX OLD DATA
+    if(users[id] && typeof users[id] === "number"){
+        users[id] = {password: pass, balance: users[id]};
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    if(!users[id]){
+        alert("User not found ❌");
+        return;
+    }
+
+    if(users[id].password !== pass){
+        alert("Wrong password ❌");
+        return;
+    }
+
+    // SAVE USER
+    localStorage.setItem("currentUser", id);
+
+    // REDIRECT TO DASHBOARD
+    window.location.href="dashboard.html";
+}
+
+</script>
+
+</body>
+</html>
